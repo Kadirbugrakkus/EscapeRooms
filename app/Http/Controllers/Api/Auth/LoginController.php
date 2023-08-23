@@ -18,7 +18,7 @@ class LoginController extends Controller
         $validator = Validator::make($request->all(), (new LoginValidationRequest())->rules());
 
         if ($validator->fails()) {
-            return Response::withoutData(false, $validator->errors()->first());
+            return Response::withoutData(false, $validator->errors());
         }else{
             $credentials = $request->only('email', 'password');
 
