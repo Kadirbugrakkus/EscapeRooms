@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('room_categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('parent_category_id')->nullable();
             $table->string('title');
             $table->string('desc');
             $table->decimal('amount', 10,2);
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('parent_category_id')->references('id')->on('room_categories')->onDelete('cascade');
         });
     }
 

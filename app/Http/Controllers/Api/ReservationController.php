@@ -63,7 +63,6 @@ class ReservationController extends Controller
                                 'birth_day_discount' => $birthdayDiscount,
                             ]);
 
-                            // Odayı rezerve ettiğiniz için status'ı güncelleyin
                             $room->update([
                                 'status' => 1
                             ]);
@@ -86,7 +85,6 @@ class ReservationController extends Controller
                             'birth_day_discount' => $birthdayDiscount,
                         ]);
 
-                        // Odayı rezerve ettiğiniz için status'ı güncelleyin
                         $room->update([
                             'status' => 1
                         ]);
@@ -126,26 +124,19 @@ class ReservationController extends Controller
     public function cancel_reservation($id)
     {
         $user = auth()->user();
-
         if ($user->user_verified_at != null) {
             $reservation = Reservation::where('user_id', $user->id)->find($id);
-
             if (!$reservation) {
                 return Response::withoutData(false, 'Reservation not found!');
             }else{
                 $room = $reservation->room;
-
                 if ($room->status = 0) {
                     return Response::withoutData(false, 'Room status is already updated');
                 }else{
-                    // Rezervasyonu sil
                     $reservation->delete();
-
-                    // Odayı rezerve edilebilir hale getir
                     $room->update([
                         'status' => 0
                     ]);
-
                     return Response::withoutData(true, 'Reservation cancelled successfully');
                 }
             }

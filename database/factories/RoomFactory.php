@@ -22,12 +22,12 @@ class RoomFactory extends Factory
      */
     public function definition()
     {
-        $status = 0; // 0: Boş, 1: Dolu
-        $userCapacity = $this->faker->numberBetween(1, 6); // Odanın kapasitesi
+        $status = 0;
+        $userCapacity = $this->faker->numberBetween(1, 6);
 
         return [
             'room_category_id' => RoomCategory::factory(),
-            'room_no' => $this->faker->unique()->numberBetween(101, 999), // Benzersiz oda numarası
+            'room_no' => $this->faker->unique()->numberBetween(101, 999),
             'status' => $status,
             'user_capacity' => $userCapacity,
         ];

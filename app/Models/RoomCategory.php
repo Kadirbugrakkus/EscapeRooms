@@ -10,9 +10,8 @@ class RoomCategory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'parent_category_id',
         'title',
-        'description',
+        'desc',
         'amount',
     ];
 

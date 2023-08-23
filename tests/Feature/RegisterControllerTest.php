@@ -2,9 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Http\Resources\RegisterResource;
+
 use App\Models\User;
-use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -22,9 +21,9 @@ class RegisterControllerTest extends TestCase
             'name' => $this->faker->name,
             'identity_number' => $this->faker->numberBetween(10000000000, 99999999999),
             'birth_day' => $this->faker->date,
-            'phone' => $this->faker->numberBetween(1000000000, 9999999999), // Rastgele 10 haneli numara
-            'password' => $password, // Set your desired password here
-            'password_confirmation' => $password, // Set your desired password here
+            'phone' => $this->faker->numberBetween(1000000000, 9999999999),
+            'password' => $password,
+            'password_confirmation' => $password,
         ];
 
         $response = $this->withHeaders(['accept'=>'application/json'])->post('/api/register', $userData);
@@ -91,6 +90,5 @@ class RegisterControllerTest extends TestCase
                 ],
             ]);
     }
-
 }
 

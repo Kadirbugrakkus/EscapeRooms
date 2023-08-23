@@ -17,8 +17,8 @@ class GetReservationResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'room_number' => $this->when($this->room, fn() => $this->room->room_no),
-            'start_date' => \Carbon\Carbon::parse($this->reservation_start)->format('Y-m-d H:i:s'), // Saat, gün, ay, yıl
-            'end_date' => \Carbon\Carbon::parse($this->reservation_end)->format('Y-m-d H:i:s'), // Saat, gün, ay, yıl
+            'start_date' => \Carbon\Carbon::parse($this->reservation_start)->format('Y-m-d H:i:s'),
+            'end_date' => \Carbon\Carbon::parse($this->reservation_end)->format('Y-m-d H:i:s'),
             'total_amount' => $this->total_amount,
             'birth_day_discount' => $this->birth_day_discount,
         ];

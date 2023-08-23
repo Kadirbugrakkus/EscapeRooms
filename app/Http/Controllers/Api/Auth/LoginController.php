@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginValidationRequest;
 use App\Http\Resources\LoginResource;
-use App\Http\Resources\UserResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -44,7 +43,7 @@ class LoginController extends Controller
         if ($validator->fails()) {
             return Response::withoutData(false, $validator->errors()->first());
         }else{
-            $user = auth()->user(); // Giriş yapmış kullanıcıyı al
+            $user = auth()->user();
             if (!$user->verificationCodes->isEmpty()) {
 
                 $latestVerificationCode = $user->verificationCodes->last();

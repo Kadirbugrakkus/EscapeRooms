@@ -19,21 +19,26 @@ class RoomCategoryFactory extends Factory
      *
      * @return array
      */
+    protected $cachedDefinition;
+
     public function definition()
     {
-        $title = $this->faker->randomElement(['Normal', 'Delüx', 'Ultra Delüx']);
-        $descriptions = [
-            'Normal' => 'Standart bir oda.',
-            'Delüx' => 'Geniş ve konforlu bir oda.',
-            'Ultra Delüx' => 'Lüks ve üst düzey bir oda.',
-        ];
+        if (!$this->cachedDefinition) {
+            $title = $this->faker->randomElement(['Normal', 'Delüx', 'Ultra Delüx']);
+            $descriptions = [
+                'Normal' => 'Standart bir oda.',
+                'Delüx' => 'Geniş ve konforlu bir oda.',
+                'Ultra Delüx' => 'Lüks ve üst düzey bir oda.',
+            ];
 
-        return [
-            'parent_category_id' => null, // Eğer alt kategori olacaksa buraya ilgili kategori ID'si verilir
-            'title' => $title,
-            'desc' => $descriptions[$title],
-            'amount' => $this->faker->randomFloat(2, 100, 1000), // Fiyat aralığını uygun şekilde ayarlayın
-        ];
+            $this->cachedDefinition = [
+                'title' => $title,
+                'desc' => $descriptions[$title],
+                'amount' => $this->faker->randomFloat(2, 100, 1000),
+            ];
+        }
+
+        return $this->cachedDefinition;
     }
 }
 
