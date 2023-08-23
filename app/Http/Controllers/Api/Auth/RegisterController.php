@@ -17,7 +17,7 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), (new RegisterValidationRequest())->rules());
 
         if ($validator->fails()) {
-            return Response::withoutData(false, $validator->errors()->first());
+            return Response::withoutData(false, $validator->errors());
         } else {
             $user = User::create([
                 'email' => $request->input('email'),

@@ -27,7 +27,7 @@ class RegisterValidationRequest extends FormRequest
             'username' => 'required|unique:users',
             'name' => 'required',
             'identity_number' => 'required|unique:users|digits:11',
-            'birth_day' => 'required|date',
+            'birth_day' => 'required|date|before_or_equal:today',
             'phone' => 'required|unique:users|digits:10',
             'password' => [
                 'required',

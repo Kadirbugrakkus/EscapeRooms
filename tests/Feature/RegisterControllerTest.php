@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Http\Resources\RegisterResource;
 use App\Models\User;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -14,25 +15,24 @@ class RegisterControllerTest extends TestCase
 
     public function test_user_registration_success()
     {
+        $password = $this->faker->regexify('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$');
         $userData = [
             'email' => $this->faker->unique()->safeEmail,
             'username' => $this->faker->userName,
             'name' => $this->faker->name,
-            'identity_number' => $this->faker->numerify('###########'),
+            'identity_number' => $this->faker->numberBetween(10000000000, 99999999999),
             'birth_day' => $this->faker->date,
             'phone' => $this->faker->numberBetween(1000000000, 9999999999), // Rastgele 10 haneli numara
-            'password' => 'Password123', // Set your desired password here
-            'password_confirmation' => 'Password123', // Set your desired password here
+            'password' => $password, // Set your desired password here
+            'password_confirmation' => $password, // Set your desired password here
         ];
 
-        $response = $this->postJson('/api/register', $userData);
+        $response = $this->withHeaders(['accept'=>'application/json'])->post('/api/register', $userData);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'success',
-                'message',
                 'data' => [
-                    'user_id',
+                    'id',
                     'email',
                     'username',
                     'name',
@@ -45,6 +45,7 @@ class RegisterControllerTest extends TestCase
             ]);
 
 
+
         $this->assertDatabaseHas('users', [
             'email' => $userData['email'],
             'username' => $userData['username'],
@@ -55,40 +56,41 @@ class RegisterControllerTest extends TestCase
     public function testUserRegistrationValidationFail()
     {
         $invalidUserData = [
-            'email' => '', // Eksik email
-            'username' => '', // Eksik kullanıcı adı
-            'name' => '', // Eksik isim
-            'identity_number' => '12345678901', // Hatalı kimlik numarası (11 hane olmalı)
-            'birth_day' => '01-12-1999', // Hatalı doğum tarihi
-            'phone' => '05554443322', // Hatalı telefon numarası (10 hane olmalı)
-            'password' => 'password', // Geçersiz şifre (büyük harf, küçük harf ve sayı içermeli)
-            'password_confirmation' => 'password1', // Geçersiz şifre (büyük harf, küçük harf ve sayı içermeli)
+            'email' => '',
+            'username' => '',
+            'name' => '',
+            'identity_number' => '012233445571',
+            'birth_day' => '2024-08-04',
+            'phone' => '0554443311',
+            'password' => 'Password',
+            'password_confirmation' => 'Password1',
         ];
 
+        $response = $this->withHeaders(['accept' => 'application/json'])->post('/api/register', $invalidUserData);
 
-        $response = $this->postJson('/api/register', $invalidUserData);
+        $expectedErrors = [
+            "The email field is required.",
+            "The username field is required.",
+            "The name field is required.",
+            "The identity number field must be 11 digits.",
+            "The birth day field must be a date before or equal to today.",
+            "The password field confirmation does not match.",
+            "The password field format is invalid.",
+        ];
 
         $response->assertStatus(422)
             ->assertJson([
-                [
-                    "success" => false,
-                    "message" => "Validation failed",
-                    "data" => [
-                        "errors" => [
-                            "email" => ["The email field is required."],
-                            "username" => ["The username field is required."],
-                            "name" => ["The name field is required."],
-                            "identity_number" => ["The identity number field is required."],
-                            "birth_day" => ["The birth day field must be a valid date."],
-                            "password" => [
-                                "The password field confirmation does not match.",
-                                "The password field format is invalid.",
-                            ],
-                        ],
-                    ],
+                "message" => "The email field is required. (and 6 more errors)",
+                "errors" => [
+                    "email" => [$expectedErrors[0]],
+                    "username" => [$expectedErrors[1]],
+                    "name" => [$expectedErrors[2]],
+                    "identity_number" => [$expectedErrors[3]],
+                    "birth_day" => [$expectedErrors[4]],
+                    "password" => [$expectedErrors[5], $expectedErrors[6]],
                 ],
             ]);
-
     }
+
 }
 
