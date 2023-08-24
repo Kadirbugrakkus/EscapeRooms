@@ -9,9 +9,11 @@
 
 # Escape Room Reservation System
 
-Welcome to the Escape Room Reservation System! This project provides a platform for users to book and manage reservations for escape rooms.
+Welcome to the Escape Room Reservation System! This project provides a platform for users to book and manage
+reservations for escape rooms.
 
 ## Table of Contents
+
 - [Introduction](#introduction)
 - [Features](#features)
 - [Getting Started](#getting-started)
@@ -23,7 +25,9 @@ Welcome to the Escape Room Reservation System! This project provides a platform 
 
 ## Introduction
 
-Escape Room Reservation System is a web application that allows users to browse available escape rooms, make reservations, and manage their bookings. The system also provides a convenient API for integrating with other applications.
+Escape Room Reservation System is a web application that allows users to browse available escape rooms, make
+reservations, and manage their bookings. The system also provides a convenient API for integrating with other
+applications.
 
 ## Features
 
@@ -57,11 +61,11 @@ To get started with the Escape Room Reservation System, follow these steps:
 1. Change to the project directory:
    ```shell
    cd escape-room-reservation
-   
+
 2. Install dependencies using Composer:
     ```shell
    composer install
-   
+
 3. Create a .env file by copying .env.example:
     ```shell
    cp .env.example .env
@@ -70,18 +74,34 @@ To get started with the Escape Room Reservation System, follow these steps:
 4. Generate an application key:
    ```shell
    php artisan key:genarate
-   
+
 5. Configure your database settings in the .env file.
 
 6. Migrate the database:
     ```shell
    php artisan migrate
-   
+
 7. Run the development server:
     ```shell
    php artisan serve
 
-Usage
+## Automatic Reservation Status Update
+
+In order to manage reservations and update the room status when the reservation end date is exceeded, a scheduling
+mechanism has been implemented using Laravel's scheduling system. This ensures that the room status is automatically
+updated without manual intervention.
+
+The scheduling logic is implemented in the `Kernel.php` file. It runs a scheduled task every five seconds to check
+reservations in the `Reservation` model. If the reservation's end date has passed, the status of the room associated
+with the reservation is updated from 1 (occupied) to 0 (available).
+
+To run this scheduling task, you can use the following Artisan command in your terminal:
+
+-   ```bash
+    php artisan schedule:work
+
+
+## Usage
 Register or log in to your account.
 Browse available escape rooms and their details.
 Make reservations for your desired time slots.
